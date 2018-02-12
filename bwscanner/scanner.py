@@ -38,13 +38,11 @@ pass_scan = click.make_pass_decorator(ScanInstance)
               default='info', type=click.Choice(['debug', 'info', 'warn', 'error', 'critical']))
 @click.option('-f', '--logfile', type=click.Path(), help='The file the log will be written to',
               default=os.environ.get("BWSCANNER_LOGFILE", 'bwscanner.log'))
-@click.option('--launch-tor/--no-launch-tor', default=False,
-              help='Launch Tor or try to connect to an existing Tor instance.')
 @click.option('--circuit-build-timeout', default=20,
               help='Option passed when launching Tor.')
 @click.version_option(BWSCAN_VERSION)
 @click.pass_context
-def cli(ctx, data_dir, loglevel, logfile, launch_tor, circuit_build_timeout):
+def cli(ctx, data_dir, loglevel, logfile, circuit_build_timeout):
     """
     The bwscan tool measures Tor relays and calculates their bandwidth. These
     bandwidth measurements can then be aggregate to create the bandwidth
@@ -58,7 +56,7 @@ def cli(ctx, data_dir, loglevel, logfile, launch_tor, circuit_build_timeout):
         os.makedirs(ctx.obj.measurement_dir)
 
     # Create a connection to a Tor instance
-    ctx.obj.tor_state = connect_to_tor(launch_tor, circuit_build_timeout)
+    ctx.obj.tor_state = connect_to_tor(circuit_build_timeout)
 
     # Set up the logger to only output log lines of level `loglevel` and above.
     setup_logging(log_level=loglevel, log_name=logfile)

@@ -135,7 +135,7 @@ def wait_for_newconsensus(tor_state):
 
 
 @defer.inlineCallbacks
-def connect_to_tor(launch_tor, circuit_build_timeout, control_port=None,
+def connect_to_tor(circuit_build_timeout, control_port=None,
                    tor_overrides=None):
     """
     Launch or connect to a Tor instance
@@ -158,16 +158,14 @@ def connect_to_tor(launch_tor, circuit_build_timeout, control_port=None,
     if tor_overrides:
         tor_options.update(tor_overrides)
 
-    if launch_tor:
+    if control_port is None:
         log.info("Spawning a new Tor instance.")
         # TODO: Pass in data_dir directory so consensus can be cached
         tor = yield txtorcon.launch(reactor)
+    # this should be used only for chutney
     else:
         log.info("Trying to connect to a running Tor instance.")
-        if control_port:
-            endpoint = endpoints.TCP4ClientEndpoint(reactor, "localhost", control_port)
-        else:
-            endpoint = None
+        endpoint = endpoints.TCP4ClientEndpoint(reactor, "localhost", control_port)
         tor = yield txtorcon.connect(reactor, endpoint)
 
     # Get Tor state first to avoid a race conditions where CONF_CHANGED

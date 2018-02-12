@@ -13,7 +13,6 @@ class TorTestCase(unittest.TestCase):
     @defer.inlineCallbacks
     def setUp(self):
         self.tor_state = yield connect_to_tor(
-                launch_tor=False,
                 control_port=int(os.environ.get('CHUTNEY_CONTROL_PORT')),
                 circuit_build_timeout=30,
         )
