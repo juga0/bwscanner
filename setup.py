@@ -12,7 +12,14 @@ setup(name='bwscanner',  # TODO: pick a better name
       description='Tor Bandwidth Scanner',
       long_description=__doc__,
       keywords=['python', 'twisted', 'txtorcon', 'tor', 'metrics'],
-      install_requires=open('requirements.txt').readlines(),
+      extras_require={
+        'dev': ['ipython', 'pyflakes', 'pep8'],
+        'test': ['tox', 'pytest'],
+        'doc': ['sphinx', 'pylint']
+      },
+      python_requires=">=2.7, !3.*",
+      install_requires=['click', 'pyOpenSSL', 'service-identity', 'Twisted',
+                        'stem', 'txsocksx', 'txtorcon'],
       classifiers=[
         'Framework :: Twisted',
         'Development Status :: 3 - Alpha',
